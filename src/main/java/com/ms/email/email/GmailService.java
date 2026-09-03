@@ -15,12 +15,10 @@ import com.google.api.services.gmail.model.Message;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
+import jakarta.mail.Message.RecipientType;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.*;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -28,6 +26,8 @@ import java.io.InputStreamReader;
 import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 @Service
 public class GmailService {
@@ -65,7 +65,7 @@ public class GmailService {
 
         MimeMessage email = new MimeMessage(session);
         email.setFrom(new InternetAddress("me"));
-        email.addRecipient(jakarta.mail.Message.RecipientType.TO, new InternetAddress(destinatario));
+        email.addRecipient(RecipientType.TO, new InternetAddress(destinatario));
         email.setSubject(assunto);
 
         MimeBodyPart textPart = new MimeBodyPart();
@@ -99,7 +99,7 @@ public class GmailService {
 
         MimeMessage email = new MimeMessage(session);
         email.setFrom(new InternetAddress("me"));
-        email.addRecipient(jakarta.mail.Message.RecipientType.TO, new InternetAddress(destinatario));
+        email.addRecipient(RecipientType.TO, new InternetAddress(destinatario));
         email.setSubject(assunto);
         email.setText(corpo, "utf-8");
 
