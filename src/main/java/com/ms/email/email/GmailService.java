@@ -27,10 +27,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.util.ResourceUtils;
 
 @Service
-public class GmailService {
+@ConditionalOnProperty(name = "muttley.email.provider", havingValue = "gmail", matchIfMissing = true)
+public class GmailService implements EmailSender {
 
     private static final String APPLICATION_NAME = "Muttley";
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -91,6 +93,7 @@ public class GmailService {
         gmail.users().messages().send("me", message).execute();
     }
 
+    @Override
     public void enviarEmail(String destinatario, String assunto, String corpo) throws Exception {
         Gmail gmail = buildGmailClient();
 

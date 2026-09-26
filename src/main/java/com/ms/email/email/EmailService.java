@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EmailService {
 
-    private final GmailService gmailService;
+    private final EmailSender emailSender;
 
     public void enviarConfirmacaoCadastro(InscricaoEmail dto) {
         String assunto = "Inscrição confirmada — " + dto.tema();
@@ -75,9 +75,10 @@ public class EmailService {
 
     private void enviar(String destinatario, String assunto, String corpo) {
         try {
-            gmailService.enviarEmail(destinatario, assunto, corpo);
+            emailSender.enviarEmail(destinatario, assunto, corpo);
         } catch (Exception e) {
-            log.error("Erro ao enviar e-mail para {}: {}", destinatario, e.getMessage());
+            log.error("Erro ao enviar e-mail para {}", destinatario, e);
+            throw new IllegalStateException("Falha ao enviar e-mail.", e);
         }
     }
 }
