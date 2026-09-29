@@ -2,9 +2,19 @@ package com.ms.email.email;
 
 import com.ms.email.email.dto.*;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class EmailServiceTest {
+    @Test void falhaNoSmtpNaoEhDescartada() throws Exception {
+        EmailSender remetente=mock(EmailSender.class);
+        doThrow(new IllegalStateException("SMTP indisponível"))
+                .when(remetente).enviarEmail(anyString(),anyString(),anyString());
+        assertThatThrownBy(() -> new EmailService(remetente).enviarCredenciaisLogin(
+                new CadastroEmail("teste@example.invalid","Ana","convite","https://example.invalid")))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Falha ao enviar e-mail.");
+    }
     @Test void confirmacaoIncluiIdentificacaoHorarioLocalENumero() throws Exception {
         GmailService gmail=mock(GmailService.class);
         new EmailService(gmail).enviarConfirmacaoCadastro(new InscricaoEmail("teste@example.invalid","Ana","Semana","2026-09-03","09:00","11:00","Auditorio","42"));
