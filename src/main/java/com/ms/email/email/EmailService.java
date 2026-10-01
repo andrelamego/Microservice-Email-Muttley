@@ -30,11 +30,12 @@ public class EmailService {
     }
 
     public void enviarCredenciaisLogin(CadastroEmail dto) {
-        String assunto = "Complete seu cadastro, " + dto.nome() + "!";
+        String assunto = "Convite para criar sua conta no Muttley";
         String corpo = "Olá, " + dto.nome() + "!\n\n"
-                + "Para acessar seu dashboard pessoal posteriomente, é necessário se cadastrar!\n\n"
-                + "Segue link para criação da sua conta:" + "\n"
-                + "Link: " + dto.baseUrl() + "/register?id=" + dto.id() + "\n\n"
+                + "Você se inscreveu em um evento e ainda não possui uma conta no Muttley.\n"
+                + "Crie sua conta para acompanhar suas participações e certificados.\n\n"
+                + "O convite é válido por 24 horas. Se você receber um novo convite, use o link mais recente.\n"
+                + "Link: " + unirUrl(dto.baseUrl(), "/register?id=" + dto.id()) + "\n\n"
                 + "Equipe Muttley";
 
         enviar(dto.destinatario(), assunto, corpo);
@@ -52,11 +53,10 @@ public class EmailService {
     }
 
     public void enviarEventoConcluido(EventoEmail dto) {
-        String assunto = "Obrigado pela participação — " + dto.tema();
+        String assunto = "Evento concluído — " + dto.tema();
         String corpo = "Olá, " + dto.nome() + "!\n\n"
-                + "O evento \"" + dto.tema() + "\" foi concluído com sucesso. "
-                + "Agradecemos sua participação!\n\n"
-                + "Em breve seu certificado estará disponível.\n\n"
+                + "O evento \"" + dto.tema() + "\", realizado em " + dto.data() + ", foi concluído.\n\n"
+                + "Se sua presença foi confirmada, você receberá outra mensagem com o link do certificado.\n\n"
                 + "Equipe Muttley";
 
         enviar(dto.destinatario(), assunto, corpo);
@@ -65,12 +65,16 @@ public class EmailService {
     public void enviarCertificados(CertificadoEmail dto) {
         String assunto = "Certificado — " + dto.tema();
         String corpo = "Olá, " + dto.nome() + "!\n\n"
-                + "Segue o certificicado relacionado ao evento — " + dto.tema() + " realizado no dia " + dto.dataEvento() +"\n\n"
-                + "Data de emissão: " + dto.dataEmissao() +"\n\n"
-                + "Link para acesso: " + dto.baseUrl() + dto.urlCert() +"\n\n"
+                + "Seu certificado do evento \"" + dto.tema() + "\", realizado em " + dto.dataEvento() + ", foi emitido.\n\n"
+                + "Data de emissão: " + dto.dataEmissao() + "\n"
+                + "Acesse o certificado: " + unirUrl(dto.baseUrl(), dto.urlCert()) + "\n\n"
                 + "Equipe Muttley";
 
         enviar(dto.destinatario(), assunto, corpo);
+    }
+
+    private String unirUrl(String baseUrl, String caminho) {
+        return baseUrl.replaceAll("/+$", "") + "/" + caminho.replaceFirst("^/+", "");
     }
 
     private void enviar(String destinatario, String assunto, String corpo) {
