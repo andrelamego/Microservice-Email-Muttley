@@ -31,7 +31,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.util.ResourceUtils;
 
 @Service
-@ConditionalOnProperty(name = "muttley.email.provider", havingValue = "gmail", matchIfMissing = true)
+@ConditionalOnProperty(name = "muttley.email.provider", havingValue = "gmail")
 public class GmailService implements EmailSender {
 
     private static final String APPLICATION_NAME = "Muttley";
